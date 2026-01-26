@@ -13,15 +13,23 @@
 5.日语练习
 
 # 2026-01-22
-## 1.CLion远程编译
-## 2.看一节网课--数据获取：https://space.bilibili.com/1567748478/lists/28144?type=season
-## 4.英语练习
-## 5.日语练习
+1.CLion远程编译
+2.看一节网课--数据获取：https://space.bilibili.com/1567748478/lists/28144?type=season
+4.英语练习
+5.日语练习
 
 
 # 2026-01-23
-## 1.本地电脑对接
-## 2.看一节网课--数据获取：https://space.bilibili.com/1567748478/lists/28144?type=season
-## 3.n8n应用转移
-## 4.英语练习
-## 5.日语练习
+1.本地电脑对接
+2.看一节网课--数据获取：https://space.bilibili.com/1567748478/lists/28144?type=season
+3.n8n应用转移
+4.英语练习
+5.日语练习
+
+
+# 2026-01-26
+1.C++的ORM框架完整对接
+2.看一节网课--数据获取：https://space.bilibili.com/1567748478/lists/28144?type=season
+3.Clawd bot了解
+4.英语练习
+5.日语练习
