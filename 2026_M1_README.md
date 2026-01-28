@@ -45,6 +45,6 @@
 # 2026-01-28
 1.C++的grpc框架对接
 2.看一节网课--数据获取：https://space.bilibili.com/1567748478/lists/28144?type=season
-3.Clawd bot配置
+3.MQ对比项目配置
 4.英语练习
 5.日语练习
