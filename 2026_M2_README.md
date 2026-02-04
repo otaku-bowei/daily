@@ -15,3 +15,9 @@
 3.看一集数据分析网课————https://space.bilibili.com/1567748478/lists/28144?type=season
 4.完善日语学习app
 
+# 2026-02-03
+1.英语练习
+2.日语练习
+3.看一集数据分析网课————https://space.bilibili.com/1567748478/lists/28144?type=season
+4.日语学习app--每日练习功能完善
+5.JVM面经复习
