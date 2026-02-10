@@ -1,0 +1,210 @@
+# N8N 工作流自动化方案
+
+## 整体架构
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        N8N 调度中心                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐      │
+│  │  产品经理    │───▶│  开发工程师  │───▶│  测试人员   │      │
+│  │  工作流      │    │  工作流      │    │  工作流     │      │
+│  │  (每10分钟)  │    │  (每5分钟)   │    │  (手动触发) │      │
+│  └──────────────┘    └──────────────┘    └──────────────┘      │
+│         │                   │                   │               │
+│         ▼                   ▼                   ▼               │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐      │
+│  │ 需求数据库   │    │功能点数据库  │    │测试报告存储  │      │
+│  └──────────────┘    └──────────────┘    └──────────────┘      │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 工作流详细设计
+
+### 1️⃣ 产品经理工作流 (Product Manager Workflow)
+
+**触发条件**: Cron定时器 `*/10 * * * *` (每10分钟)
+
+**执行步骤**:
+1. **读取新增需求** - SQL查询: `SELECT * FROM requirements WHERE created_at > NOW() - INTERVAL '12 hours' AND status = 'pending'`
+2. **思维链解析** - 调用LLM(DeepSeek/MiniMax)进行需求分解
+3. **生成功能点** - 按JSON格式输出功能点列表
+4. **存储功能点** - 插入到 `feature_points` 表
+5. **更新需求状态** - 标记需求为 `analyzed`
+6. **发送邮件** - 通知解析结果
+
+**LLM Prompt示例**:
+```
+你是一个产品经理。请分析以下需求，按功能点分解：
+
+需求内容：{requirement_content}
+
+请以JSON格式输出：
+{
+  "功能点列表": [
+    {
+      "功能名称": "xxx",
+      "功能描述": "xxx",
+      "优先级": "高/中/低",
+      "技术复杂度": "简单/中等/复杂"
+    }
+  ],
+  "实现建议": "xxx"
+}
+```
+
+---
+
+### 2️⃣ 开发工程师工作流 (Developer Workflow)
+
+**触发条件**: Cron定时器 `*/5 * * * *` (每5分钟)
+
+**执行步骤**:
+1. **扫描待开发功能点** - SQL: `SELECT * FROM feature_points WHERE status = 'pending' AND developer IS NULL LIMIT 1`
+2. **生成开发方案** - 调用LLM生成代码实现
+3. **代码生成** - 根据Prompt生成具体代码
+4. **更新状态** - 标记为 `in_progress` 或 `completed`
+5. **记录日志** - 存储开发过程
+
+**LLM Prompt示例**:
+```
+你是一个资深全栈开发工程师。根据以下功能点生成代码：
+
+功能名称：{feature_name}
+功能描述：{feature_description}
+技术栈：Python FastAPI + SwiftUI + PostgreSQL
+
+请生成：
+1. 后端API接口设计
+2. 数据库模型设计
+3. 业务逻辑代码
+4. 前端页面代码（如需要）
+
+代码要求：
+- 符合项目现有代码风格
+- 添加必要的错误处理
+- 包含单元测试
+```
+
+---
+
+### 3️⃣ 测试人员工作流 (Tester Workflow)
+
+**触发条件**: 手动触发或功能点标记为 `testing`
+
+**执行步骤**:
+1. **获取待测试功能** - SQL: `SELECT * FROM feature_points WHERE status = 'completed' AND tested_at IS NULL`
+2. **生成测试用例** - 调用LLM生成
+3. **执行测试** - 调用OpenClaw API测试
+4. **生成测试报告** - 整合测试结果
+5. **存储报告** - 保存到数据库
+6. **发送报告** - 邮件发送
+
+**测试报告格式**:
+```markdown
+## 测试报告 - {功能名称}
+
+### 一、后端接口文档
+| 方法 | 路径 | 参数 | 返回值 |
+|------|------|------|--------|
+| GET | /api/xxx | param | JSON |
+
+### 二、测试用例
+| 用例编号 | 用例描述 | 预期结果 | 测试结果 |
+|----------|----------|----------|----------|
+| TC001 | xxx | xxx | PASS |
+
+### 三、前端测试结果
+- 界面渲染：✅ 正常
+- 交互逻辑：✅ 正常
+- 数据展示：✅ 正常
+
+### 四、测试总结
+- 通过：xx 个
+- 失败：xx 个
+- 通过率：xx%
+```
+
+---
+
+## 你需要准备的配置
+
+请提供以下信息，我才能帮你创建n8n工作流：
+
+### 1. 数据库配置
+```bash
+# PostgreSQL 连接信息
+- 主机地址: 
+- 端口: 
+- 数据库名: 
+- 用户名: 
+- 密码: 
+- 表名前缀: (例如: oc_)
+```
+
+### 2. 需求表结构示例
+```sql
+CREATE TABLE requirements (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(200),
+    content TEXT,
+    status VARCHAR(20) DEFAULT 'pending',  -- pending, analyzed, completed
+    created_at TIMESTAMP DEFAULT NOW(),
+    analyzed_at TIMESTAMP
+);
+
+CREATE TABLE feature_points (
+    id SERIAL PRIMARY KEY,
+    requirement_id INTEGER,
+    name VARCHAR(200),
+    description TEXT,
+    priority VARCHAR(10),
+    complexity VARCHAR(10),
+    status VARCHAR(20) DEFAULT 'pending',  -- pending, in_progress, completed, testing
+    developer VARCHAR(100),
+    code_content TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    completed_at TIMESTAMP
+);
+```
+
+### 3. LLM配置
+```bash
+# Ollama DeepSeek
+- Ollama URL: http://localhost:11434
+
+# MiniMax API
+- API Key: 
+- Base URL: https://api.minimax.chat
+```
+
+### 4. 邮件配置
+```bash
+- SMTP 服务器: 
+- SMTP 端口: 
+- 发件邮箱: 
+- 发件密码/授权码: 
+- 收件邮箱:
+```
+
+### 5. n8n访问
+```bash
+- n8n URL: 
+- n8n API Key (可选):
+```
+
+---
+
+## 下一步
+
+1. **提供上述配置信息**
+2. 我会创建三个完整的n8n工作流JSON
+3. 你导入到n8n中即可运行
+
+或者你可以先告诉我：
+- 你最想先实现哪个工作流？
+- 数据库表结构是否需要我帮你创建？
