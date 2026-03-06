@@ -14,3 +14,24 @@
 3.分布式面经复习
 4.leetcode一题
 5.数据分析————https://space.bilibili.com/1567748478/lists/28144?type=season
+
+# 2026-03-04
+1.英语练习
+2.日语练习
+3.leetcode一题
+4.数据分析————https://space.bilibili.com/1567748478/lists/28144?type=season
+
+# 2026-03-05
+1.英语练习
+2.日语练习
+3.leetcode一题
+4.数据分析————https://space.bilibili.com/1567748478/lists/28144?type=season
+5.arxiv数据爬取
+
+
+# 2026-03-06
+1.英语练习
+2.日语练习
+3.leetcode一题
+4.数据分析————https://space.bilibili.com/1567748478/lists/28144?type=season
+5.arxiv数据爬取
