@@ -156,3 +156,18 @@
 3.leetcode练习
 4.数据分析ai对练
 5.skills学习
+
+# 2026-03-28
+1.英语练习
+2.日语练习
+3.leetcode练习
+4.skills学习
+5.GNN学习————https://www.bilibili.com/video/BV1iT4y1d7zP/?spm_id_from=333.1387.search.video_card.click
+
+# 2026-03-29
+1.英语练习
+2.日语练习
+3.leetcode练习
+4.skills学习
+5.面试模拟
+6.learn claudecode学习
