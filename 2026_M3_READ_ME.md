@@ -171,3 +171,16 @@
 4.skills学习
 5.面试模拟
 6.learn claudecode学习
+
+# 2026-03-30
+1.英语练习
+2.日语练习
+3.leetcode练习
+4.skills学习
+5.learn claudecode学习
+
+# 2026-03-31
+1.英语练习
+2.日语练习
+3.leetcode练习
+4.learn claudecode学习
